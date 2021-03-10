@@ -1,6 +1,6 @@
 <?php
 
-namespace helpers;
+namespace core\helpers;
 
 /**
  * Debug helper functionality class.

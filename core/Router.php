@@ -17,6 +17,13 @@ class Router
     public $routes = [];
 
     /**
+     * Current route.
+     *
+     * @var array
+     */
+    public $route = [];
+
+    /**
      * Loads the registered routes.
      *
      * @return void
@@ -25,23 +32,9 @@ class Router
     {
         $routes = require 'config/routes.php';
 
-        foreach ($routes as $route => $params) {
-            $this->add($route, $params);
+        foreach ($routes as $route) {
+            $this->routes[] = $route;
         }
-    }
-
-    /**
-     * Adds the regexp modified routes to local routes storage.
-     *
-     * @param  string $route  - Route that needs adding to router.
-     * @param  array  $params - Route params that needs adding to router.
-     * @return void
-     */
-    private function add(string $route, array $params)
-    {
-        $route = '#^' . $route . '$#';
-
-        $this->routes[$route] = $params;
     }
 
     /**
@@ -53,12 +46,14 @@ class Router
     {
         $url = $_SERVER['REQUEST_URI'];
 
-        foreach ($this->routes as $route => $params) {
-            if (preg_match($route, $url, $matches)) {
-                $this->params = $params;
+        foreach ($this->routes as $route) {
+            if ($route['url'] == $url) {
+                if ($route['method'] == $_SERVER['REQUEST_METHOD']) {
+                    $this->route = $route;
 
-                return true;  
-            } 
+                    return true;  
+                }
+            }
         }
 
         return false;
@@ -74,15 +69,15 @@ class Router
         $this->load();
         
         if ($this->match()) {
-            $path = 'api\\' . $this->params['class'];
+            $path = 'api\\' . $this->route['class'];
             
             if (class_exists($path)) {
-                $action = 'execute';
+                $action = $this->route['action'];
 
                 if (method_exists($path, $action)) {
                     $api = new $path();
                     $api->$action();
-                } 
+                }
             } 
         }
     }
