@@ -3,6 +3,7 @@
 namespace api;
 
 use core\Validator;
+use core\helpers\Debug;
 
 /**
  * Articles API class.
@@ -10,7 +11,7 @@ use core\Validator;
 class Articles extends \core\API
 {
     /**
-     * API table name.
+     * API resource table name.
      *
      * @var string
      */
@@ -30,11 +31,22 @@ class Articles extends \core\API
     /**
      * @inheritDoc
      */
+    public function show()
+    {
+        $id = (int) $this->params[0];
+
+        Debug::show($id);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function store()
     {
         $input = $this->getRequestInput();
         $expected = ['title', 'excerpt', 'content'];
 
+        // TODO: Rewrite validator call and functionality.
         if (Validator::check(['title', 'excerpt', 'content'], $input)) {
             $params = [
                 'title'   => (string) $input['title'],

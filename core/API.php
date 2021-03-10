@@ -17,11 +17,22 @@ abstract class API
     protected $db;
 
     /**
-     * API class constructor.
+     * Current route request params.
+     *
+     * @var array
      */
-    public function __construct()
+    protected $params = [];
+
+    /**
+     * API class constructor.
+     * 
+     * @param array $params - Request params.
+     * @return void
+     */
+    public function __construct(array $params)
     {
-        $this->db = new DB;
+        $this->db     = new DB;
+        $this->params = $params;
 
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Methods: OPTIONS,GET,POST,PUT,DELETE");

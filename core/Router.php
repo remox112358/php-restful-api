@@ -2,7 +2,7 @@
 
 namespace core;
 
-use helpers\Debug;
+use core\helpers\Debug;
 
 /**
  * Router functionality class.
@@ -24,6 +24,13 @@ class Router
     public $route = [];
 
     /**
+     * Current route parameters.
+     *
+     * @var array
+     */
+    public $params = [];
+
+    /**
      * Loads the registered routes.
      *
      * @return void
@@ -33,6 +40,8 @@ class Router
         $routes = require 'config/routes.php';
 
         foreach ($routes as $route) {
+            $route['url'] = '/^' . \str_replace('/', '\/', $route['url']) . '$/';
+
             $this->routes[] = $route;
         }
     }
@@ -47,11 +56,14 @@ class Router
         $url = $_SERVER['REQUEST_URI'];
 
         foreach ($this->routes as $route) {
-            if ($route['url'] == $url) {
+            if (\preg_match($route['url'], $url, $params)) {
                 if ($route['method'] == $_SERVER['REQUEST_METHOD']) {
-                    $this->route = $route;
+                    \array_shift($params);
 
-                    return true;  
+                    $this->route  = $route;
+                    $this->params = $params;
+
+                    return true;
                 }
             }
         }
@@ -75,7 +87,7 @@ class Router
                 $action = $this->route['action'];
 
                 if (method_exists($path, $action)) {
-                    $api = new $path();
+                    $api = new $path($this->params);
                     $api->$action();
                 }
             } 

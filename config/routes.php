@@ -11,6 +11,12 @@ return [
         'method' => 'GET',
     ],
     [
+        'url'    => '/articles/(\d+)',
+        'class'  => 'Articles',
+        'action' => 'show',
+        'method' => 'GET',
+    ],
+    [
         'url'    => '/articles',
         'class'  => 'Articles',
         'action' => 'store',
