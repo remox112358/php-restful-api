@@ -8,7 +8,7 @@ use helpers\Debug;
 /**
  * Database connection class using PDO.
  */
-class DB
+final class DB
 {
     /**
      * Database connection config.
@@ -33,15 +33,21 @@ class DB
     {
         $cfg = require_once 'config/db.php';
 
+        try {
+            $db = new PDO($cfg['dsn'] . ';' . $cfg['charset'], $cfg['user'], $cfg['password']);
+        } catch(PDOException $error) {
+            die($error->getMessage());
+        }
+
         $this->config = $cfg;
-        $this->db     = new PDO($cfg['dsn'] . ';' . $cfg['charset'], $cfg['user'], $cfg['password']);
+        $this->db     = $db;
     }
 
     /**
      * Makes query to database using PDO.
      *
      * @param  string $sql    - SQL query that needs to prepare.
-     * @param  array  $params - SQL query params that needs to bind.
+     * @param  array  $params - Params that needs to bind.
      * @param  string $fetch  - Fetch type of query.
      * @return void
      */

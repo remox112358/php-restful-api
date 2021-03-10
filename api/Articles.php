@@ -9,14 +9,19 @@ use helpers\Debug;
  */
 class Articles extends \core\API
 {
-    const TABLE_NAME = 'articles';
+    /**
+     * API table name.
+     *
+     * @var string
+     */
+    public $tableName = 'articles';
 
     /**
      * @inheritDoc
      */
     public function execute()
     {
-        $articles = $this->db->query("SELECT * FROM :table", ['table' => self::TABLE_NAME]);
+        $articles = $this->db->query("SELECT * FROM $this->tableName");
         
         $this->output($articles);
     }
