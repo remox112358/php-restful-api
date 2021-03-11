@@ -37,32 +37,83 @@ class Router
     private function __clone() {}
 
     /**
-     * Loads the registered routes.
+     * Adds the route in list of routes.
      *
+     * @param  string $url    - URL of route.
+     * @param  string $path   - Path to callback action.
+     * @param  string $method - Request HTTP method.
      * @return void
      */
-    private static function load()
+    private static function add(string $url, string $path, string $method)
     {
-        $routes = require 'config/routes.php';
+        $route = [
+            'url'    => '/^' . \str_replace('/', '\/', $url) . '$/',
+            'class'  => \explode('@', $path)[0],
+            'action' => \explode('@', $path)[1],
+            'method' => $method,
+        ];
 
-        foreach ($routes as $route) {
-            $route['url'] = '/^' . \str_replace('/', '\/', $route['url']) . '$/';
-
-            self::$routes[] = $route;
-        }
+        self::$routes[] = $route;
     }
 
     /**
-     * Adds the route to list.
+     * Adds the route with GET method to list.
      *
      * @param  string $url  - URL of route.
      * @param  string $path - Path to callback action.
      * @return void
      */
-    private static function add(string $url, string $path)
+    public static function get(string $url, string $path)
     {
-        Debug::show($url);
-        Debug::show($path, true);
+        self::add($url, $path, 'GET');
+    }
+
+    /**
+     * Adds the route with POST method to list.
+     *
+     * @param  string $url  - URL of route.
+     * @param  string $path - Path to callback action.
+     * @return void
+     */
+    public static function post(string $url, string $path)
+    {
+        self::add($url, $path, 'POST');
+    }
+
+    /**
+     * Adds the route with PUT method to list.
+     *
+     * @param  string $url  - URL of route.
+     * @param  string $path - Path to callback action.
+     * @return void
+     */
+    public static function put(string $url, string $path)
+    {
+        self::add($url, $path, 'PUT');
+    }
+
+    /**
+     * Adds the route with PATCH method to list.
+     *
+     * @param  string $url  - URL of route.
+     * @param  string $path - Path to callback action.
+     * @return void
+     */
+    public static function patch(string $url, string $path)
+    {
+        self::add($url, $path, 'PATCH');
+    } 
+
+    /**
+     * Adds the route with DELETE method to list.
+     *
+     * @param  string $url  - URL of route.
+     * @param  string $path - Path to callback action.
+     * @return void
+     */
+    public static function delete(string $url, string $path)
+    {
+        self::add($url, $path, 'DELETE');
     }
 
     /**
@@ -97,8 +148,6 @@ class Router
      */
     public static function execute()
     {
-        self::load();
-        
         if (self::match()) {
             $path = 'api\\' . self::$route['class'];
             

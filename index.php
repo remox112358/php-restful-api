@@ -3,7 +3,7 @@
 use core\Router;
 
 /**
- * Class autolaoder.
+ * Class autoloader.
  */
 spl_autoload_register(function($class) {
     $path = str_replace('\\', '/', $class . '.php');
@@ -13,5 +13,13 @@ spl_autoload_register(function($class) {
     }
 });
 
-Router::add('/articles/{id}', 'Articles@show');
+/**
+ * API routes.
+ */
+Router::get('/articles', 'Articles@index');
+Router::get('/articles/(\d+)', 'Articles@show');
+Router::post('/articles', 'Articles@store');
+Router::put('/articles/(\d+)', 'Articles@update');
+Router::delete('/articles/(\d+)', 'Articles@destroy');
+
 Router::execute();
