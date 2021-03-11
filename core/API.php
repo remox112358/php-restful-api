@@ -24,15 +24,23 @@ abstract class API
     protected $params = [];
 
     /**
+     * Available HTTP statuses.
+     *
+     * @var array
+     */
+    protected $statuses = [];
+
+    /**
      * API class constructor.
      * 
-     * @param array $params - Request params.
+     * @param  array $params - Request params.
      * @return void
      */
     public function __construct(array $params)
     {
-        $this->db     = new DB;
-        $this->params = $params;
+        $this->db       = new DB;
+        $this->params   = $params;
+        $this->statuses = require_once 'core/config/statuses.php';
 
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Methods: OPTIONS,GET,POST,PUT,DELETE");
@@ -60,24 +68,15 @@ abstract class API
     /**
      * Declares HTTP response.
      *
-     * @param integer $code - HTTP response code.
+     * @param  integer $code - HTTP response code.
      * @return void
      */
     protected function status(int $code)
     {
-        switch ($code) {
-            case 200:
-                \header("HTTP/1.1 200 OK");
-                break;
-            case 201:
-                \header("HTTP/1.1 201 Created");
-                break;
-            case 404:
-                \header("HTTP/1.1 404 Not Found");
-                break;
-            case 422:
-                \header("HTTP/1.1 422 Unprocessable Entity");
-                break;
+        if ($this->statuses[$code]) {
+            \header("HTTP/1.1 " . $code . " " . $this->statuses[$code]);
+        } else {
+            \header("HTTP/1.1 " . 500 . " " . $this->statuses[500]);
         }
     }
 

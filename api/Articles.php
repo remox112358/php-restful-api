@@ -35,7 +35,10 @@ class Articles extends \core\API
     {
         $id = (int) $this->params[0];
 
-        Debug::show($id);
+        $article = $this->db->query("SELECT * FROM $this->tableName WHERE id = :id LIMIT 1", ['id' => $id]);
+
+        $this->status(200);
+        $this->output($article[0] ?? []);
     }
 
     /**
@@ -49,15 +52,36 @@ class Articles extends \core\API
         // TODO: Rewrite validator call and functionality.
         if (Validator::check(['title', 'excerpt', 'content'], $input)) {
             $params = [
-                'title'   => (string) $input['title'],
-                'excerpt' => (string) $input['excerpt'],
-                'content' => (string) $input['content'],
+                'title'       => (string) $input['title'],
+                'excerpt'     => (string) $input['excerpt'],
+                'content'     => (string) $input['content'],
+                'created_at'  => date('Y-m-d H:i:s'),
             ];
     
-            $this->db->query("INSERT INTO $this->tableName (title, excerpt, content) VALUES(:title, :excerpt, :content)", $params);
+            $this->db->query("INSERT INTO $this->tableName (title, excerpt, content, created_at) VALUES(:title, :excerpt, :content, :created_at)", $params);
     
             $this->status(201);
             $this->output();
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function update()
+    {
+        $input = $this->getRequestInput();
+        $params = [
+            'id'         => $this->params[0],
+            'title'      => isset($input['title']) ? (string) $input['title'] : null,
+            'excerpt'    => isset($input['excerpt']) ? (string) $input['excerpt'] : null,
+            'content'    => isset($input['content']) ? (string) $input['content'] : null,
+            'updated_at' => date('Y-m-d H:i:s'),
+        ];
+
+        $this->db->query("UPDATE $this->tableName SET title = :title, excerpt = :excerpt, content = :content, updated_at = :updated_at WHERE id = :id", $params);
+
+        $this->status(200);
+        $this->output();
     }
 }

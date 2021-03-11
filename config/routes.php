@@ -22,4 +22,10 @@ return [
         'action' => 'store',
         'method' => 'POST',
     ],
+    [
+        'url'    => '/articles/(\d+)',
+        'class'  => 'Articles',
+        'action' => 'update',
+        'method' => 'PUT',
+    ]
 ];
