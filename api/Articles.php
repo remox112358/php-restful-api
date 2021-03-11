@@ -6,7 +6,7 @@ use core\Validator;
 use core\helpers\Debug;
 
 /**
- * Articles API class.
+ * Example API class for Articles.
  */
 class Articles extends \core\API
 {
