@@ -87,7 +87,7 @@ abstract class API
      */
     protected function getRequestInput() : array
     {
-        return (array) \json_decode(\file_get_contents('php://input', true));
+        return (array) \json_decode(\file_get_contents('php://input', true), JSON_FORCE_OBJECT);
     }
 
     /**

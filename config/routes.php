@@ -27,5 +27,11 @@ return [
         'class'  => 'Articles',
         'action' => 'update',
         'method' => 'PUT',
-    ]
+    ],
+    [
+        'url'    => '/articles/(\d+)',
+        'class'  => 'Articles',
+        'action' => 'destroy',
+        'method' => 'DELETE',
+    ],
 ];

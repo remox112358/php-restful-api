@@ -84,4 +84,18 @@ class Articles extends \core\API
         $this->status(200);
         $this->output();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function destroy()
+    {
+        $input = $this->getRequestInput();
+        $id    = $this->params[0];
+
+        $this->db->query("DELETE FROM $this->tableName WHERE id = :id", ['id' => $id]);
+
+        $this->status(200);
+        $this->output();
+    }
 }
