@@ -2,7 +2,7 @@
 
 namespace core;
 
-use core\DB;
+use core\lib\DB;
 
 /**
  * API functionality class.

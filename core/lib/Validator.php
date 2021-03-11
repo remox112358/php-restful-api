@@ -1,6 +1,6 @@
 <?php
 
-namespace core;
+namespace core\lib;
 
 /**
  * Validator functionality class.

@@ -1,9 +1,8 @@
 <?php
 
-namespace core;
+namespace core\lib;
 
 use PDO;
-use helpers\Debug;
 
 /**
  * Database connection class using PDO.

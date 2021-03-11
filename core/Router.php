@@ -14,36 +14,55 @@ class Router
      *
      * @var array
      */
-    public $routes = [];
+    private static $routes = [];
 
     /**
      * Current route.
      *
      * @var array
      */
-    public $route = [];
+    public static $route = [];
 
     /**
      * Current route parameters.
      *
      * @var array
      */
-    public $params = [];
+    public static $params = [];
+
+    /**
+     * Disable class creation and copy.
+     */
+    private function __construct() {}
+    private function __clone() {}
 
     /**
      * Loads the registered routes.
      *
      * @return void
      */
-    private function load()
+    private static function load()
     {
         $routes = require 'config/routes.php';
 
         foreach ($routes as $route) {
             $route['url'] = '/^' . \str_replace('/', '\/', $route['url']) . '$/';
 
-            $this->routes[] = $route;
+            self::$routes[] = $route;
         }
+    }
+
+    /**
+     * Adds the route to list.
+     *
+     * @param  string $url  - URL of route.
+     * @param  string $path - Path to callback action.
+     * @return void
+     */
+    private static function add(string $url, string $path)
+    {
+        Debug::show($url);
+        Debug::show($path, true);
     }
 
     /**
@@ -51,17 +70,17 @@ class Router
      *
      * @return boolean
      */
-    public function match() : bool
+    public static function match() : bool
     {
         $url = $_SERVER['REQUEST_URI'];
 
-        foreach ($this->routes as $route) {
+        foreach (self::$routes as $route) {
             if (\preg_match($route['url'], $url, $params)) {
                 if ($route['method'] == $_SERVER['REQUEST_METHOD']) {
                     \array_shift($params);
 
-                    $this->route  = $route;
-                    $this->params = $params;
+                    self::$route  = $route;
+                    self::$params = $params;
 
                     return true;
                 }
@@ -76,18 +95,18 @@ class Router
      *
      * @return void
      */
-    public function execute()
+    public static function execute()
     {
-        $this->load();
+        self::load();
         
-        if ($this->match()) {
-            $path = 'api\\' . $this->route['class'];
+        if (self::match()) {
+            $path = 'api\\' . self::$route['class'];
             
             if (class_exists($path)) {
-                $action = $this->route['action'];
+                $action = self::$route['action'];
 
                 if (method_exists($path, $action)) {
-                    $api = new $path($this->params);
+                    $api = new $path(self::$params);
                     $api->$action();
                 }
             } 

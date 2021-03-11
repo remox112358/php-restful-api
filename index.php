@@ -13,5 +13,5 @@ spl_autoload_register(function($class) {
     }
 });
 
-$router = new Router;
-$router->execute();
+Router::add('/articles/{id}', 'Articles@show');
+Router::execute();

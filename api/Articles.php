@@ -2,7 +2,7 @@
 
 namespace api;
 
-use core\Validator;
+use core\lib\Validator;
 use core\helpers\Debug;
 
 /**
