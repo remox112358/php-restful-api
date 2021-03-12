@@ -6,16 +6,27 @@ use core\lib\Validator;
 use core\helpers\Debug;
 
 /**
- * Example API class for Articles.
+ * Example API class for Article.
  */
-class Articles extends \core\API
+class Article extends \core\API
 {
     /**
      * API resource table name.
      *
      * @var string
      */
-    public $tableName = 'articles';
+    private $tableName = 'articles';
+
+    /**
+     * API resource params rules.
+     *
+     * @var array
+     */
+    private $rules = [
+        'title'   => 'required|unique:articles|min:4|max:32',
+        'excerpt' => ['required', 'min:16', 'max:256'],
+        'content' => 'required',
+    ];
 
     /**
      * @inheritDoc

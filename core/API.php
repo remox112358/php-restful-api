@@ -66,7 +66,7 @@ abstract class API
     }
 
     /**
-     * Declares HTTP response.
+     * Declares HTTP response status.
      *
      * @param  integer $code - HTTP response code.
      * @return void

@@ -16,10 +16,10 @@ spl_autoload_register(function($class) {
 /**
  * API routes.
  */
-Router::get('/articles', 'Articles@index');
-Router::get('/articles/(\d+)', 'Articles@show');
-Router::post('/articles', 'Articles@store');
-Router::put('/articles/(\d+)', 'Articles@update');
-Router::delete('/articles/(\d+)', 'Articles@destroy');
+Router::get('/articles', 'Article@index');
+Router::get('/articles/(\d+)', 'Article@show');
+Router::post('/articles', 'Article@store');
+Router::put('/articles/(\d+)', 'Article@update');
+Router::delete('/articles/(\d+)', 'Article@destroy');
 
 Router::execute();
