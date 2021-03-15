@@ -30,7 +30,7 @@ final class DB
      */
     public function __construct()
     {
-        $cfg = require_once 'config/db.php';
+        $cfg = require 'config/db.php';
 
         try {
             $db = new PDO($cfg['dsn'] . ';' . $cfg['charset'], $cfg['user'], $cfg['password']);

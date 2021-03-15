@@ -2,7 +2,6 @@
 
 namespace api;
 
-use core\lib\Validator;
 use core\helpers\Debug;
 
 /**
@@ -16,17 +15,6 @@ class Article extends \core\API
      * @var string
      */
     private $tableName = 'articles';
-
-    /**
-     * API resource params rules.
-     *
-     * @var array
-     */
-    private $rules = [
-        'title'   => 'required|unique:articles|min:4|max:32',
-        'excerpt' => ['required', 'min:16', 'max:256'],
-        'content' => 'required',
-    ];
 
     /**
      * @inheritDoc
@@ -57,23 +45,19 @@ class Article extends \core\API
      */
     public function store()
     {
-        $input = $this->getRequestInput();
-        $expected = ['title', 'excerpt', 'content'];
 
-        // TODO: Rewrite validator call and functionality.
-        if (Validator::check(['title', 'excerpt', 'content'], $input)) {
-            $params = [
-                'title'       => (string) $input['title'],
-                'excerpt'     => (string) $input['excerpt'],
-                'content'     => (string) $input['content'],
-                'created_at'  => date('Y-m-d H:i:s'),
-            ];
-    
-            $this->db->query("INSERT INTO $this->tableName (title, excerpt, content, created_at) VALUES(:title, :excerpt, :content, :created_at)", $params);
-    
-            $this->status(201);
-            $this->output();
-        }
+        $input = $this->getRequestInput();
+        $params = [
+            'title'       => (string) $input['title'],
+            'excerpt'     => (string) $input['excerpt'],
+            'content'     => (string) $input['content'],
+            'created_at'  => date('Y-m-d H:i:s'),
+        ];
+
+        $this->db->query("INSERT INTO $this->tableName (title, excerpt, content, created_at) VALUES(:title, :excerpt, :content, :created_at)", $params);
+
+        $this->status(201);
+        $this->output();
     }
 
     /**

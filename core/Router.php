@@ -119,7 +119,7 @@ class Router
     /**
      * Finds out if the visited url exists in routes.
      *
-     * @return boolean
+     * @return bool
      */
     public static function match() : bool
     {
