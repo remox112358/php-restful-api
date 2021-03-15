@@ -21,7 +21,8 @@ class Article extends \core\API
      */
     public function index()
     {
-        $articles = $this->db->query("SELECT * FROM $this->tableName");
+        $sql      = "SELECT * FROM $this->tableName";
+        $articles = $this->db->query($sql);
 
         $this->status(200);
         $this->output($articles);
@@ -32,12 +33,12 @@ class Article extends \core\API
      */
     public function show()
     {
-        $id = (int) $this->params[0];
-
-        $article = $this->db->query("SELECT * FROM $this->tableName WHERE id = :id LIMIT 1", ['id' => $id]);
+        $sql     = "SELECT * FROM $this->tableName WHERE id = :id LIMIT 1";
+        $id      = (int) $this->params[0];
+        $article = $this->db->query($sql, ['id' => $id])[0] ?? [];
 
         $this->status(200);
-        $this->output($article[0] ?? []);
+        $this->output($article);
     }
 
     /**
@@ -45,8 +46,8 @@ class Article extends \core\API
      */
     public function store()
     {
-
-        $input = $this->getRequestInput();
+        $sql    = "INSERT INTO $this->tableName (title, excerpt, content, created_at) VALUES(:title, :excerpt, :content, :created_at)";
+        $input  = $this->getRequestInput();
         $params = [
             'title'       => (string) $input['title'],
             'excerpt'     => (string) $input['excerpt'],
@@ -54,7 +55,7 @@ class Article extends \core\API
             'created_at'  => date('Y-m-d H:i:s'),
         ];
 
-        $this->db->query("INSERT INTO $this->tableName (title, excerpt, content, created_at) VALUES(:title, :excerpt, :content, :created_at)", $params);
+        $this->db->query($sql, $params);
 
         $this->status(201);
         $this->output();
@@ -65,7 +66,8 @@ class Article extends \core\API
      */
     public function update()
     {
-        $input = $this->getRequestInput();
+        $sql    = "UPDATE $this->tableName SET title = :title, excerpt = :excerpt, content = :content, updated_at = :updated_at WHERE id = :id";
+        $input  = $this->getRequestInput();
         $params = [
             'id'         => $this->params[0],
             'title'      => isset($input['title']) ? (string) $input['title'] : null,
@@ -74,7 +76,7 @@ class Article extends \core\API
             'updated_at' => date('Y-m-d H:i:s'),
         ];
 
-        $this->db->query("UPDATE $this->tableName SET title = :title, excerpt = :excerpt, content = :content, updated_at = :updated_at WHERE id = :id", $params);
+        $this->db->query($sql, $params);
 
         $this->status(200);
         $this->output();
@@ -85,10 +87,13 @@ class Article extends \core\API
      */
     public function destroy()
     {
-        $input = $this->getRequestInput();
-        $id    = $this->params[0];
+        $sql    = "DELETE FROM $this->tableName WHERE id = :id";
+        $input  = $this->getRequestInput();
+        $params = [
+            'id' => $this->params[0],
+        ];
 
-        $this->db->query("DELETE FROM $this->tableName WHERE id = :id", ['id' => $id]);
+        $this->db->query($sql, $params);
 
         $this->status(200);
         $this->output();
